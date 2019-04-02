@@ -1,0 +1,4 @@
+All the dependencies required are mentioned in the package.json.
+
+For running the website just run the command:
+node server.js

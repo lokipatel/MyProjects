@@ -1,0 +1,41 @@
+<%include ./partials/header%>
+
+
+<div class="container">
+    <header class="jumbotron">
+        <div class="container">
+            <h1>
+                Welcome To TravelBlog
+            </h1>
+            <p>Travel makes one modest. You see what a tiny place you occupy in the world!!!</p>
+
+            <p>
+                <a href="/char_page/new" class="btn btn-primary btn-large">Share Experience</a>
+            </p>
+        </div>
+    </header>
+
+    <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+        <% characters.forEach(function(characters){ %>
+        <div class="col-md-3 col-sm-6">
+            <div class="thumbnail">
+                <h4>
+                    <%=characters.name%>
+                </h4>
+                <img class="img-thumbnail" src="<%=characters.url%>">
+            </div>
+            <p>
+                <a href="/char_page/<%=characters._id%>" class="btn btn-primary">More Info</a>
+            </p>
+        </div>
+        <%});%>
+    </div>
+
+
+
+
+</div>
+<%include ./partials/footer%>
+
+
+
