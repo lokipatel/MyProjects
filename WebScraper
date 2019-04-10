@@ -1,1 +1,92 @@
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+import time
+import xlwt 
+from xlwt import Workbook 
+
+
+wb = Workbook() 
+  
+# add_sheet is used to create sheet. 
+sheet1 = wb.add_sheet('Sheet1')
+
+#t = PrettyTable(['Name', 'Date', 'Address'])
+# used for the inputs
+CountryName=input("Enter Country Name: ")
+ProvinceName=input("Enter Province: ")
+
+#chrome_options = webdriver.ChromeOptions()
+#chrome_options.add_argument('--headless')
+
+#set the path for chrome driver where chrome driver is present
+browser = webdriver.Chrome('C:\\Users\\Lokesh patel\\Desktop\\web_dev\\Pyhton\\Web Scraper\\chromedriver')
+
+browser.get('https://obittree.com/obituary/list-obituaries.php')
+
+#to be used when we need country
+#country=browser.find_elements_by_xpath('//select[@name="Country"]')
+
+
+# used for the sending the country string to the website
+country=browser.find_element_by_id('country')
+country.send_keys(CountryName)
+
+
+
+# used for the sending the province string to the website
+province=browser.find_element_by_id('province')
+province.send_keys(ProvinceName)
+
+button = browser.find_element_by_id('search-obits')
+button.click()
+driver=browser
+time.sleep(2)
+
+# the below code is to handle the ajax loading of the page
+# The logic scroll down until you reach the complete bottom
+check_height = driver.execute_script("return document.body.scrollHeight;") 
+while True:
+    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(3)
+    height = driver.execute_script("return document.body.scrollHeight;") 
+    if height == check_height: 
+        break 
+    check_height = height
+
+#Find the respective element for the mentioned attributes
+name=browser.find_elements_by_xpath('//strong[@class="obituary-item-name"]')
+date=browser.find_elements_by_xpath('//span[@class="obituary-item-dod"]')
+address=browser.find_elements_by_xpath('//span[@class="obituary-item-fhname"]')
+
+#put the scraped data in a tabular format
+# the data scraped is put in a excel sheet 
+col_x=0
+col_y=1
+col_z=2
+sheet1.write(0,col_x,'Name')
+sheet1.write(0,col_y,'Date')
+sheet1.write(0,col_z,'Address')
+str="Name\tDate\tAddress"
+print(str.expandtabs(20))
+for i in range(len(name)):
+	n=name[i].text
+	n=n.strip()
+	sheet1.write(i+1, col_x, n) 
+	sheet1.write(i+1, col_y, date[i].text) 
+	sheet1.write(i+1, col_z, address[i].text)
+	print(n,date[i].text,address[i].text,sep='\t')
+	
+
+
+print("All the scraped data will be found in the file web.xls")
+wb.save('web.xls')
+
+
+
+
+
+
 
